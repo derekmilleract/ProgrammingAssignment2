@@ -1,0 +1,37 @@
+## These two functions in conjunction with one another can take in a matrix
+## and output 4 functions which are used to access the cache. The second
+## function is able to check the cache for a matrix and find the inverse
+## whether it is there or not.
+
+## The makeCacheMatrix function takes in a function and outputs a 
+## list of 4 functions that can be used to access cached matrices
+
+makeCacheMatrix <- function(x = matrix(), ...) {
+    m <- NULL
+    set <- function(y) {
+        x <<- y
+        m <<- NULL
+    }
+    get <- function() x
+    setInvMat <- function(inverse) m <<- inverse
+    getInvMat <- function() m
+    list(set = set, get = get,
+         setInvMat = setInvMat,
+         getInvMat = getInvMat)
+}
+
+
+## This function checks to see if the matrix is already stored in the cache
+## in order to save time. If not, it solves for the inverse and outputs.
+
+cacheSolve <- function(x, ...) {
+    m <- x$getInvMat()
+    if(!is.null(m)) {
+        message("getting cached data")
+        return(m)
+    }
+    matrixdata <- x$get()
+    m <- solve(matrixdata, ...)
+    x$setInvMat(m)
+    m
+}
